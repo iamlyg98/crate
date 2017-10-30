@@ -23,24 +23,18 @@ package io.crate.analyze;
 
 import io.crate.analyze.relations.DocTableRelation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DeleteAnalyzedStatement implements AnalyzedStatement {
 
-    final List<WhereClause> whereClauses = new ArrayList<>();
-    final DocTableRelation analyzedRelation;
+    private final DocTableRelation analyzedRelation;
+    private final WhereClause whereClause;
 
-    public DeleteAnalyzedStatement(DocTableRelation analyzedRelation) {
+    public DeleteAnalyzedStatement(DocTableRelation analyzedRelation, WhereClause whereClause) {
         this.analyzedRelation = analyzedRelation;
+        this.whereClause = whereClause;
     }
 
     public DocTableRelation analyzedRelation() {
         return analyzedRelation;
-    }
-
-    public List<WhereClause> whereClauses() {
-        return whereClauses;
     }
 
     @Override
@@ -51,5 +45,9 @@ public class DeleteAnalyzedStatement implements AnalyzedStatement {
     @Override
     public boolean isWriteOperation() {
         return true;
+    }
+
+    public WhereClause whereClause() {
+        return whereClause;
     }
 }

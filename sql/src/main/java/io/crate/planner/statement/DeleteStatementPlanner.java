@@ -53,49 +53,24 @@ import io.crate.types.DataTypes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 public final class DeleteStatementPlanner {
 
     public static Plan planDelete(DeleteAnalyzedStatement analyzedStatement, Planner.Context context) {
         DocTableRelation tableRelation = analyzedStatement.analyzedRelation();
-        List<WhereClause> whereClauses = new ArrayList<>(analyzedStatement.whereClauses().size());
-        List<DocKeys.DocKey> docKeys = new ArrayList<>(analyzedStatement.whereClauses().size());
+        WhereClause whereClause = analyzedStatement.whereClause();
 
-        Map<Integer, Integer> itemToBulkIdx = new HashMap<>();
-        int bulkIdx = -1;
-        int itemIdx = 0;
-        for (WhereClause whereClause : analyzedStatement.whereClauses()) {
-            bulkIdx++;
-            if (whereClause.noMatch()) {
-                continue;
-            }
-            if (whereClause.docKeys().isPresent() && whereClause.docKeys().get().size() == 1) {
-                DocKeys.DocKey docKey = whereClause.docKeys().get().getOnlyKey();
-                if (docKey.id() != null) {
-                    docKeys.add(docKey);
-                    itemToBulkIdx.put(itemIdx, bulkIdx);
-                    itemIdx++;
-                }
-            } else if (!whereClause.noMatch()) {
-                whereClauses.add(whereClause);
-            }
-        }
-
-        if (!docKeys.isEmpty()) {
+        Optional<DocKeys> docKeys = whereClause.docKeys();
+        if (docKeys.isPresent()) {
             return new ESDelete(
                 context.jobId(),
                 tableRelation.tableInfo(),
-                docKeys,
-                itemToBulkIdx,
-                analyzedStatement.whereClauses().size());
-        } else if (!whereClauses.isEmpty()) {
-            return deleteByQuery(tableRelation.tableInfo(), whereClauses, context);
+                docKeys.get()
+            );
         }
-
-        return new NoopPlan(context.jobId());
+        return deleteByQuery(tableRelation.tableInfo(), whereClause, context);
     }
 
     private static Plan deleteByQuery(DocTableInfo tableInfo,

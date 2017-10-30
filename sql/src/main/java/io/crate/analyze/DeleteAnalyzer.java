@@ -30,13 +30,11 @@ import io.crate.analyze.relations.RelationAnalysisContext;
 import io.crate.analyze.relations.RelationAnalyzer;
 import io.crate.analyze.relations.StatementAnalysisContext;
 import io.crate.analyze.symbol.Symbol;
-import io.crate.analyze.symbol.Symbols;
 import io.crate.analyze.where.WhereClauseAnalyzer;
 import io.crate.exceptions.UnsupportedFeatureException;
 import io.crate.metadata.Functions;
 import io.crate.metadata.RowGranularity;
 import io.crate.metadata.TransactionContext;
-import io.crate.metadata.doc.DocSysColumns;
 import io.crate.metadata.table.Operation;
 import io.crate.sql.tree.Delete;
 import io.crate.sql.tree.ParameterExpression;
@@ -59,8 +57,6 @@ class DeleteAnalyzer {
     }
 
     public AnalyzedStatement analyze(Delete node, Analysis analysis) {
-        int numNested = 1;
-
         Function<ParameterExpression, Symbol> convertParamFunction = analysis.parameterContext();
         TransactionContext transactionContext = analysis.transactionContext();
         StatementAnalysisContext statementAnalysisContext = new StatementAnalysisContext(
@@ -69,6 +65,7 @@ class DeleteAnalyzer {
             transactionContext);
         RelationAnalysisContext relationAnalysisContext = statementAnalysisContext.startRelation();
         AnalyzedRelation analyzedRelation = relationAnalyzer.analyze(node.getRelation(), statementAnalysisContext);
+        statementAnalysisContext.endRelation();
 
         assert analyzedRelation instanceof DocTableRelation : "analyzedRelation must be DocTableRelation";
         DocTableRelation docTableRelation = (DocTableRelation) analyzedRelation;
@@ -77,7 +74,6 @@ class DeleteAnalyzer {
             RowGranularity.CLUSTER,
             null,
             docTableRelation);
-        DeleteAnalyzedStatement deleteAnalyzedStatement = new DeleteAnalyzedStatement(docTableRelation);
         ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer(
             functions,
             transactionContext,
@@ -88,28 +84,13 @@ class DeleteAnalyzer {
                 transactionContext.sessionContext().defaultSchema()),
             null);
         ExpressionAnalysisContext expressionAnalysisContext = new ExpressionAnalysisContext();
-        WhereClauseAnalyzer whereClauseAnalyzer = new WhereClauseAnalyzer(
-            functions, deleteAnalyzedStatement.analyzedRelation());
 
-        if (analysis.parameterContext().hasBulkParams()) {
-            numNested = analysis.parameterContext().numBulkParams();
-        }
-        for (int i = 0; i < numNested; i++) {
-            analysis.parameterContext().setBulkIdx(i);
-            Symbol query = expressionAnalyzer.generateQuerySymbol(node.getWhere(), expressionAnalysisContext);
-            WhereClause whereClause = new WhereClause(normalizer.normalize(query, transactionContext));
-            whereClause = validate(whereClauseAnalyzer.analyze(whereClause, transactionContext));
-            deleteAnalyzedStatement.whereClauses.add(whereClause);
-        }
-
-        statementAnalysisContext.endRelation();
-        return deleteAnalyzedStatement;
-    }
-
-    private WhereClause validate(WhereClause whereClause) {
-        if (!whereClause.docKeys().isPresent() && Symbols.containsColumn(whereClause.query(), DocSysColumns.VERSION)) {
-            throw VERSION_SEARCH_EX;
-        }
-        return whereClause;
+        Symbol querySymbol = normalizer.normalize(
+            expressionAnalyzer.generateQuerySymbol(node.getWhere(), expressionAnalysisContext),
+            transactionContext
+        );
+        WhereClauseAnalyzer whereClauseAnalyzer = new WhereClauseAnalyzer(functions, docTableRelation);
+        WhereClause where = whereClauseAnalyzer.analyze(new WhereClause(querySymbol), transactionContext);
+        return new DeleteAnalyzedStatement(docTableRelation, where);
     }
 }

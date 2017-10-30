@@ -22,8 +22,8 @@
 
 package io.crate.protocols.postgres;
 
-import io.crate.action.sql.RowConsumerToResultReceiver;
 import io.crate.action.sql.ResultReceiver;
+import io.crate.action.sql.RowConsumerToResultReceiver;
 import io.crate.action.sql.SessionContext;
 import io.crate.analyze.Analysis;
 import io.crate.analyze.Analyzer;
