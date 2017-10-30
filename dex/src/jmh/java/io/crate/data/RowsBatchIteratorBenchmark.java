@@ -109,4 +109,36 @@ public class RowsBatchIteratorBenchmark {
         }
         leftJoin.moveToStart();
     }
+
+    @Benchmark
+    public void measureSkipLimitSkipLimit(Blackhole blackhole) throws Exception {
+        int firstOffset = 1000;
+        int secondOffset = 500;
+        int firstLimit = 2000;
+        int secondLimit = 250;
+        BatchIterator<Row> it = LimitingBatchIterator.newInstance(
+            new SkippingBatchIterator<>(
+                LimitingBatchIterator.newInstance(
+                    new SkippingBatchIterator<>(new InMemoryBatchIterator<>(rows, SENTINEL), firstOffset),
+                    firstLimit
+                ),
+                secondOffset
+            ),
+            secondLimit
+        );
+        while (it.moveNext()) {
+            blackhole.consume(it.currentElement().get(0));
+        }
+    }
+
+    @Benchmark
+    public void measureSkipLimit(Blackhole blackhole) throws Exception {
+        BatchIterator<Row> it = LimitingBatchIterator.newInstance(
+            new SkippingBatchIterator<>(new InMemoryBatchIterator<>(rows, SENTINEL), 1000 + 500),
+            250
+        );
+        while (it.moveNext()) {
+            blackhole.consume(it.currentElement().get(0));
+        }
+    }
 }
