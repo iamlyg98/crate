@@ -402,9 +402,9 @@ class FetchOrEval implements LogicalPlan {
                     return new FetchReference(fetchId, ref);
                 });
             }
-            Symbol mapped = expressionMapping.get(output);
+            Symbol mapped = expressionMapping.get(f);
             assert mapped != null
-                : "Field mapping must exists for " + output + " in " + expressionMapping;
+                : "Field mapping must exists for " + f + " in " + expressionMapping;
             return toInputColOrFetchRef(
                 mapped, sourceOutputs, fetchInputColumnsByTable, allocateFetchRef, expressionMapping);
         });

@@ -57,7 +57,8 @@ public final class SubselectRewriter {
     }
 
     public static AnalyzedRelation rewrite(AnalyzedRelation relation) {
-        return INSTANCE.process(relation, null);
+        return relation;
+        //return INSTANCE.process(relation, null);
     }
 
     private static final class Visitor extends AnalyzedRelationVisitor<QueriedSelectRelation, AnalyzedRelation> {

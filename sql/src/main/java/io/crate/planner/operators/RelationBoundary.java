@@ -103,7 +103,7 @@ public class RelationBoundary implements LogicalPlan {
                       @Nullable Integer pageSizeHint) {
         SubqueryPlanner subqueryPlanner = new SubqueryPlanner(plannerContext);
         return MultiPhasePlan.createIfNeeded(
-            source.build(plannerContext, projectionBuilder, limit, offset, order, pageSizeHint),
+            source.build(plannerContext, projectionBuilder, limit, offset, null, pageSizeHint),
             subqueryPlanner.planSubQueries(relation::visitSymbols)
         );
     }
