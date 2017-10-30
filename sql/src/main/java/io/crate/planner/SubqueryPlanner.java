@@ -22,7 +22,6 @@
 
 package io.crate.planner;
 
-import io.crate.analyze.QuerySpec;
 import io.crate.analyze.symbol.SelectSymbol;
 import io.crate.analyze.symbol.Symbol;
 import io.crate.analyze.symbol.SymbolVisitor;
@@ -47,8 +46,8 @@ public class SubqueryPlanner {
         subQueries.put(subPlan, selectSymbol);
     }
 
-    public Map<Plan, SelectSymbol> planSubQueries(QuerySpec querySpec) {
-        querySpec.visitSymbols(visitor);
+    public Map<Plan, SelectSymbol> planSubQueries(Consumer<Consumer<? super Symbol>> symbolVisitor) {
+        symbolVisitor.accept(visitor);
         return subQueries;
     }
 
