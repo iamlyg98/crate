@@ -24,6 +24,7 @@ package io.crate.operation.user;
 
 import com.google.common.collect.ImmutableSet;
 import io.crate.analyze.user.Privilege;
+import io.crate.user.SecureHash;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -62,6 +63,11 @@ public class User {
 
     public String name() {
         return name;
+    }
+
+    @Nullable
+    public SecureHash password() {
+        return null;
     }
 
     @SuppressWarnings("WeakerAccess")
