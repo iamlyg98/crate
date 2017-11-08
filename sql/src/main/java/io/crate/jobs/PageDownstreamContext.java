@@ -337,7 +337,6 @@ public class PageDownstreamContext extends AbstractExecutionSubContext implement
     @Nullable
     @Override
     public PageBucketReceiver getBucketReceiver(byte inputId) {
-        assert inputId == 0 : "This downstream context only supports 1 input";
         return this;
     }
 }

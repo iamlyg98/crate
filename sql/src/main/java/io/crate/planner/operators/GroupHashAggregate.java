@@ -152,6 +152,7 @@ public class GroupHashAggregate implements LogicalPlan {
                 plannerContext.nextExecutionPhaseId(),
                 DISTRIBUTED_MERGE_PHASE_NAME,
                 plan.resultDescription().nodeIds().size(),
+                1,
                 nodeIds,
                 plan.resultDescription().streamOutputs(),
                 projections,

@@ -26,7 +26,9 @@ import io.crate.analyze.MultiSourceSelect;
 import io.crate.analyze.QueriedSelectRelation;
 import io.crate.analyze.QueriedTableRelation;
 import io.crate.analyze.WhereClause;
+import io.crate.analyze.relations.OrderedLimitedRelation;
 import io.crate.analyze.relations.QueriedRelation;
+import io.crate.analyze.relations.UnionSelect;
 import io.crate.analyze.symbol.FieldsVisitor;
 import io.crate.analyze.symbol.Function;
 import io.crate.analyze.symbol.RefVisitor;
@@ -112,7 +114,7 @@ public class LogicalPlanner {
                     relation.limit(),
                     relation.offset()
                 ),
-                relation.querySpec().outputs(),
+                relation.outputs(),
                 fetchMode,
                 isLastFetch,
                 relation.limit() != null
@@ -144,7 +146,13 @@ public class LogicalPlanner {
             return Collect.create((QueriedTableRelation) queriedRelation, toCollect, where);
         }
         if (queriedRelation instanceof MultiSourceSelect) {
-            return Join.createNodes(((MultiSourceSelect) queriedRelation), where);
+            return Join.createNodes((MultiSourceSelect) queriedRelation, where);
+        }
+        if (queriedRelation instanceof UnionSelect) {
+            return Union.create((UnionSelect) queriedRelation);
+        }
+        if (queriedRelation instanceof OrderedLimitedRelation) {
+            return plan(((OrderedLimitedRelation) queriedRelation).childRelation(), fetchMode, false);
         }
         if (queriedRelation instanceof QueriedSelectRelation) {
             QueriedSelectRelation selectRelation = (QueriedSelectRelation) queriedRelation;

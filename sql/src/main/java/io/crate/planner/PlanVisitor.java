@@ -134,4 +134,8 @@ public class PlanVisitor<C, R> {
     public R visitMerge(Merge merge, C context) {
         return visitPlan(merge, context);
     }
+
+    public R visitUnionPlan(UnionPlan unionPlan, C context) {
+        return visitPlan(unionPlan, context);
+    }
 }

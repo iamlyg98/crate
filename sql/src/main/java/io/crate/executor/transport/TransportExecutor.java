@@ -60,6 +60,7 @@ import io.crate.planner.MultiPhasePlan;
 import io.crate.planner.NoopPlan;
 import io.crate.planner.Plan;
 import io.crate.planner.PlanVisitor;
+import io.crate.planner.UnionPlan;
 import io.crate.planner.node.dcl.GenericDCLPlan;
 import io.crate.planner.node.ddl.CreateAnalyzerPlan;
 import io.crate.planner.node.ddl.DropTablePlan;
@@ -312,6 +313,13 @@ public class TransportExecutor implements Executor {
         @Override
         public CompletableFuture<Plan> visitMerge(Merge merge, Void context) {
             return process(merge.subPlan(), context).thenApply(p -> merge);
+        }
+
+        @Override
+        public CompletableFuture<Plan> visitUnionPlan(UnionPlan unionPlan, Void context) {
+            CompletableFuture<Plan> fLeft = process(unionPlan.left(), context);
+            CompletableFuture<Plan> fRight = process(unionPlan.right(), context);
+            return CompletableFuture.allOf(fLeft, fRight).thenApply(x -> unionPlan);
         }
 
         @Override

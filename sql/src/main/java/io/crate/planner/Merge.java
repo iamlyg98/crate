@@ -80,10 +80,11 @@ public class Merge implements Plan, ResultDescription {
             plannerContext.nextExecutionPhaseId(),
             "mergeOnHandler",
             resultDescription.nodeIds().size(),
+            1,
             handlerNodeIds,
             resultDescription.streamOutputs(),
             addProjection(projections, topN),
-            DistributionInfo.DEFAULT_SAME_NODE,
+            DistributionInfo.DEFAULT_BROADCAST,
             resultDescription.orderBy()
         );
         return new Merge(

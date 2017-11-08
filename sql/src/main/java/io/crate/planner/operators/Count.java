@@ -89,6 +89,7 @@ public class Count implements LogicalPlan {
             plannerContext.nextExecutionPhaseId(),
             COUNT_PHASE_NAME,
             countPhase.nodeIds().size(),
+            1,
             Collections.singletonList(plannerContext.handlerNode()),
             Collections.singletonList(DataTypes.LONG),
             Collections.singletonList(MergeCountProjection.INSTANCE),
