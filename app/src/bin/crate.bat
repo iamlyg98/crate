@@ -65,9 +65,6 @@ set JAVA_OPTS=%JAVA_OPTS% -Dfile.encoding=UTF-8
 REM log4j options
 set JAVA_OPTS=%JAVA_OPTS% -Dlog4j.shutdownHookEnabled=false -Dlog4j2.disable.jmx=true -Dlog4j.skipJansi=true
 
-REM Disable netty recycler
-set JAVA_OPTS=%JAVA_OPTS% -Dio.netty.noUnsafe=true -Dio.netty.noKeySetOptimization=true -Dio.netty.recycler.maxCapacityPerThread=0
-
 if "%CRATE_CLASSPATH%" == "" (
     set CRATE_CLASSPATH=%CRATE_HOME%/lib/*;%CRATE_HOME%/lib/enterprise/*;%CRATE_HOME%/lib/sigar/*
 ) else (
