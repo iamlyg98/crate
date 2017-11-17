@@ -34,22 +34,23 @@ import org.elasticsearch.common.Nullable;
 
 public class ParameterSymbolEvaluator {
 
-    private static ValueExtractor valueExtractor = new ValueExtractor();
+    private static final ValueExtractor SYMBOL_VALUE_EXTRACTOR = new ValueExtractor();
 
     /**
      * Normalizes the {@link Symbol} using the bounded {@link Row} params
-     * and extracts the avalue of a {@link Literal}
+     * and extracts the value of a {@link Literal}
      */
     public static Object eval(Functions functions, Row params, Symbol symbol, @Nullable TransactionContext transactionContext) {
         EvaluatingNormalizer normalizer = EvaluatingNormalizer.functionOnlyNormalizer(functions);
         symbol = normalizer.normalize(ParamSymbols.toLiterals(symbol, params), transactionContext);
-        return valueExtractor.process(symbol, params);
+        return SYMBOL_VALUE_EXTRACTOR.process(symbol, params);
     }
 
-   private static class ValueExtractor extends SymbolVisitor<Row, Object> {
-       @Override
-       public Object visitLiteral(Literal symbol, Row context) {
-           return symbol.value();
-       }
-   }
+    private static class ValueExtractor extends SymbolVisitor<Row, Object> {
+
+        @Override
+        public Object visitLiteral(Literal symbol, Row context) {
+            return symbol.value();
+        }
+    }
 }

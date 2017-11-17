@@ -38,13 +38,12 @@ import java.util.Map;
 public final class UserActions {
 
     private UserActions() {
-
     }
 
     public static SecureHash generateSecureHash(CreateUserAnalyzedStatement statement,
                                                 Row parameters,
                                                 Functions functions) throws GeneralSecurityException, IllegalArgumentException {
-        try(SecureString pw = getUserPasswordProperty(statement.properties(), parameters, functions)) {
+        try (SecureString pw = getUserPasswordProperty(statement.properties(), parameters, functions)) {
             SecureHash secureHash = null;
             if (pw != null) {
                 if (pw.length() == 0) {
