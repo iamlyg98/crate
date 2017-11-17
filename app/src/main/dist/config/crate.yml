@@ -95,7 +95,7 @@ auth:
     config:
       0:
         user: crate
-        address: 127.0.0.1
+        address: _local_
         method: trust
       99:
         method: password
