@@ -24,7 +24,7 @@ package io.crate.user;
 
 import com.google.common.annotations.VisibleForTesting;
 import io.crate.action.sql.ParameterSymbolEvaluator;
-import io.crate.analyze.CreateUserAnalyzedStatement;
+import io.crate.analyze.DDLUserAnalyzedStatement;
 import io.crate.analyze.symbol.Symbol;
 import io.crate.data.Row;
 import io.crate.metadata.Functions;
@@ -40,7 +40,7 @@ public final class UserActions {
     private UserActions() {
     }
 
-    public static SecureHash generateSecureHash(CreateUserAnalyzedStatement statement,
+    public static SecureHash generateSecureHash(DDLUserAnalyzedStatement statement,
                                                 Row parameters,
                                                 Functions functions) throws GeneralSecurityException, IllegalArgumentException {
         try (SecureString pw = getUserPasswordProperty(statement.properties(), parameters, functions)) {

@@ -121,6 +121,7 @@ public class Analyzer {
     private final CreateIngestionRuleAnalyzer createIngestionRuleAnalyzer;
     private final AlterTableRerouteAnalyzer alterTableRerouteAnalyzer;
     private final CreateUserAnalyzer createUserAnalyzer;
+    private final AlterUserAnalyzer alterUserAnalyzer;
 
     @Inject
     public Analyzer(Schemas schemas,
@@ -176,6 +177,7 @@ public class Analyzer {
         this.privilegesAnalyzer = new PrivilegesAnalyzer(schemas);
         this.createIngestionRuleAnalyzer = new CreateIngestionRuleAnalyzer(schemas);
         this.createUserAnalyzer = new CreateUserAnalyzer(functions);
+        this.alterUserAnalyzer = new AlterUserAnalyzer(functions);
     }
 
     public Analysis boundAnalyze(Statement statement, SessionContext sessionContext, ParameterContext parameterContext) {
