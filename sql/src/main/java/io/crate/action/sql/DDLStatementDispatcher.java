@@ -277,7 +277,7 @@ public class DDLStatementDispatcher implements BiFunction<AnalyzedStatement, Row
             } catch (GeneralSecurityException | IllegalArgumentException e) {
                 return failedFuture(e);
             }
-            return userManager.alterUser(analysis, parameters);
+            return userManager.alterUser(analysis.userName(), secureHash);
         }
 
         @Override

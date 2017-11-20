@@ -189,4 +189,5 @@ public class UsersMetaData extends AbstractNamedDiffable<MetaData.Custom> implem
     public String getWriteableName() {
         return TYPE;
     }
+
 }

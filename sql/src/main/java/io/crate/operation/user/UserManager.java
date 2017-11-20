@@ -54,8 +54,8 @@ public interface UserManager extends UserLookup {
      * Modifies a user
      *
      * @param userName name of the existing user to modify
-     * @param secureHash the password represented as hash (incl. salt, SHA-512, iterations)
-     * @return a future which returns 1 if the modify succeeds, -1 otherwise
+     * @param secureHash the password-hash consisting of a SHA-512 hash, salt and num. iterations
+     * @return a future which returns the number of rows when the User is modified
      */
     CompletableFuture<Long> alterUser(String userName, @Nullable SecureHash secureHash);
 

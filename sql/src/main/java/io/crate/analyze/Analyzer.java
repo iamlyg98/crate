@@ -36,6 +36,7 @@ import io.crate.sql.tree.AlterTableAddColumn;
 import io.crate.sql.tree.AlterTableOpenClose;
 import io.crate.sql.tree.AlterTableRename;
 import io.crate.sql.tree.AlterTableReroute;
+import io.crate.sql.tree.AlterUser;
 import io.crate.sql.tree.AstVisitor;
 import io.crate.sql.tree.BeginStatement;
 import io.crate.sql.tree.CopyFrom;
@@ -379,6 +380,11 @@ public class Analyzer {
                 node.name(),
                 node.ifExists()
             );
+        }
+
+        @Override
+        public AnalyzedStatement visitAlterUser(AlterUser node, Analysis context) {
+            return alterUserAnalyzer.analyze(node, context.paramTypeHints(), context.transactionContext());
         }
 
         @Override

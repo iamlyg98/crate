@@ -64,10 +64,14 @@ public final class UserActions {
             for (String key : properties.keySet()) {
                 if (PASSWORD_PROPERTY.equals(key)) {
                     String value = BytesRefs.toString(ParameterSymbolEvaluator.eval(functions, parameters, properties.get(key), null));
-                    return new SecureString(value.toCharArray());
+                    if (value != null) {
+                        return new SecureString(value.toCharArray());
+                    }
+                    // Password will be reset
+                    return null;
                 } else {
                     throw new IllegalArgumentException(String.format(Locale.ENGLISH,
-                        "\"%s\" is not a valid setting for CREATE USER", key));
+                        "\"%s\" is not a valid property", key));
                 }
             }
         }
