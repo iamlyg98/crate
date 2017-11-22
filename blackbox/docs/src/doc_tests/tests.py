@@ -433,7 +433,7 @@ def test_suite():
 
     # Documentation tests
     docs_suite = unittest.TestSuite()
-    s = docsuite('../../general/blob.txt', parser=bash_parser, setUp=setUp)
+    s = docsuite('../../general/blobs.txt', parser=bash_parser, setUp=setUp)
     s.layer = crate_layer
     docs_suite.addTest(s)
     for fn in ('protocols/http.txt',):
