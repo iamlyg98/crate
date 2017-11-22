@@ -39,10 +39,12 @@ Breaking Changes
 Changes
 =======
 
-- Introduce support for UNION ALL to produce the combined result of two
+- Introduce support for UNION ALL to produce the combined result of two or more
   queries, e.g.:
 
-    select * from t1 UNION ALL select * from t2
+    select id from t1
+    UNION ALL
+    select id from t2
 
 - Added new "password" authentication method which is available for connections
   via the Postgres Protocol. This method allowes clients to authenticate using
