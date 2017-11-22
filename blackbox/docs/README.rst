@@ -14,10 +14,10 @@ The documentation is structured as follows:
 |                        | release. Each document should contain upgrade      |
 |                        | information as well as a list of changes.          |
 +------------------------+----------------------------------------------------+
+| Running CrateDB        | Documentation for the ``crate`` command.           |
++------------------------+----------------------------------------------------+
 | Configuration          | Full documentation for configuration settings,     |
 |                        | split into sections by theme.                      |
-+------------------------+----------------------------------------------------+
-| Command Line Options   | Documentation for the ``crate`` command.           |
 +------------------------+----------------------------------------------------+
 | Client/Server Protocol | Documentation for client/server protocols, split   |
 |                        | into documents by protocol.                        |
