@@ -27,7 +27,7 @@ import io.crate.analyze.symbol.InputColumn;
 import io.crate.analyze.symbol.Symbol;
 import io.crate.metadata.Reference;
 import io.crate.planner.node.dml.Upsert;
-import io.crate.planner.node.dml.UpsertById;
+import io.crate.planner.node.dml.LegacyUpsertById;
 import io.crate.planner.node.dql.Collect;
 import io.crate.planner.node.dql.MergePhase;
 import io.crate.planner.node.dql.RoutedCollectPhase;
@@ -94,12 +94,12 @@ public class UpdatePlannerTest extends CrateDummyClusterServiceUnitTest {
 
     @Test
     public void testUpdateByIdPlan() throws Exception {
-        UpsertById upsertById = e.plan("update users set name='Vogon lyric fan' where id=1");
-        assertThat(upsertById.items().size(), is(1));
+        LegacyUpsertById legacyUpsertById = e.plan("update users set name='Vogon lyric fan' where id=1");
+        assertThat(legacyUpsertById.items().size(), is(1));
 
-        assertThat(upsertById.updateColumns()[0], is("name"));
+        assertThat(legacyUpsertById.updateColumns()[0], is("name"));
 
-        UpsertById.Item item = upsertById.items().get(0);
+        LegacyUpsertById.Item item = legacyUpsertById.items().get(0);
         assertThat(item.index(), is("users"));
         assertThat(item.id(), is("1"));
 
@@ -109,10 +109,10 @@ public class UpdatePlannerTest extends CrateDummyClusterServiceUnitTest {
 
     @Test
     public void testUpdatePlanWithMultiplePrimaryKeyValues() throws Exception {
-        UpsertById plan = e.plan("update users set name='Vogon lyric fan' where id in (1,2,3)");
+        LegacyUpsertById plan = e.plan("update users set name='Vogon lyric fan' where id in (1,2,3)");
 
         List<String> ids = new ArrayList<>(3);
-        for (UpsertById.Item item : plan.items()) {
+        for (LegacyUpsertById.Item item : plan.items()) {
             ids.add(item.id());
             assertThat(item.updateAssignments().length, is(1));
             assertThat(item.updateAssignments()[0], isLiteral("Vogon lyric fan", DataTypes.STRING));
@@ -123,13 +123,13 @@ public class UpdatePlannerTest extends CrateDummyClusterServiceUnitTest {
 
     @Test
     public void testUpdatePlanWithMultiplePrimaryKeyValuesPartitioned() throws Exception {
-        UpsertById planNode = e.plan("update parted_pks set name='Vogon lyric fan' where " +
-                                     "(id=2 and date = 0) OR" +
-                                     "(id=3 and date=123)");
+        LegacyUpsertById planNode = e.plan("update parted_pks set name='Vogon lyric fan' where " +
+                                           "(id=2 and date = 0) OR" +
+                                           "(id=3 and date=123)");
 
         List<String> partitions = new ArrayList<>(2);
         List<String> ids = new ArrayList<>(2);
-        for (UpsertById.Item item : planNode.items()) {
+        for (LegacyUpsertById.Item item : planNode.items()) {
             partitions.add(item.index());
             ids.add(item.id());
             assertThat(item.updateAssignments().length, is(1));

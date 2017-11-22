@@ -25,7 +25,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import io.crate.action.sql.SessionContext;
 import io.crate.analyze.AnalyzedDeleteStatement;
-import io.crate.analyze.UpdateAnalyzedStatement;
+import io.crate.analyze.AnalyzedUpdateStatement;
 import io.crate.analyze.WhereClause;
 import io.crate.analyze.relations.DocTableRelation;
 import io.crate.analyze.relations.QueriedRelation;
@@ -187,7 +187,7 @@ public class WhereClauseAnalyzerTest extends CrateDummyClusterServiceUnitTest {
                 .build());
     }
 
-    private UpdateAnalyzedStatement analyzeUpdate(String stmt) {
+    private AnalyzedUpdateStatement analyzeUpdate(String stmt) {
         return e.analyze(stmt);
     }
 
@@ -267,6 +267,8 @@ public class WhereClauseAnalyzerTest extends CrateDummyClusterServiceUnitTest {
 
     @Test
     public void testUpdateWherePartitionedByColumn() throws Exception {
+        fail("TODO");
+        /*
         UpdateAnalyzedStatement updateAnalyzedStatement = analyzeUpdate("update parted set id = 2 where date = 1395874800000");
         UpdateAnalyzedStatement.NestedAnalyzedStatement nestedAnalyzedStatement = updateAnalyzedStatement.nestedStatements().get(0);
 
@@ -277,6 +279,7 @@ public class WhereClauseAnalyzerTest extends CrateDummyClusterServiceUnitTest {
             new PartitionName("parted", Arrays.asList(new BytesRef("1395874800000"))).asIndexName()),
             nestedAnalyzedStatement.whereClause().partitions()
         );
+        */
     }
 
     @Test

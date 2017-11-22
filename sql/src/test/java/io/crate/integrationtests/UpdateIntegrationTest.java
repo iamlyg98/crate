@@ -22,7 +22,6 @@
 package io.crate.integrationtests;
 
 import io.crate.action.sql.SQLActionException;
-import io.crate.analyze.UpdateAnalyzer;
 import io.crate.testing.SQLBulkResponse;
 import io.crate.testing.TestingHelpers;
 import org.elasticsearch.common.collect.MapBuilder;
@@ -642,25 +641,25 @@ public class UpdateIntegrationTest extends SQLTransportIntegrationTest {
 
     @Test
     public void testUpdateVersionOrOperator() throws Exception {
-        expectedException.expect(SQLActionException.class);
-        expectedException.expectMessage(UpdateAnalyzer.VERSION_SEARCH_EX_MSG);
-
         execute("create table test (id int primary key, c int) with (number_of_replicas=0, refresh_interval=0)");
         ensureGreen();
         execute("insert into test (id, c) values (1, 1)");
         execute("refresh table test");
+
+        expectedException.expect(SQLActionException.class);
+        expectedException.expectMessage("\"_version\" column can only be used in the WHERE clause if ");
         execute("update test set c = 4 where _version = 2 or _version=1");
     }
 
     @Test
     public void testUpdateVersionInOperator() throws Exception {
-        expectedException.expect(SQLActionException.class);
-        expectedException.expectMessage(UpdateAnalyzer.VERSION_SEARCH_EX_MSG);
-
         execute("create table test (id int primary key, c int) with (number_of_replicas=0, refresh_interval=0)");
         ensureGreen();
         execute("insert into test (id, c) values (1, 1)");
         execute("refresh table test");
+
+        expectedException.expect(SQLActionException.class);
+        expectedException.expectMessage("\"_version\" column can only be used in the WHERE clause if ");
         execute("update test set c = 4 where _version in (1,2)");
     }
 

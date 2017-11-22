@@ -22,16 +22,6 @@
 package io.crate.analyze;
 
 import com.google.common.collect.ImmutableMap;
-import io.crate.analyze.relations.DocTableRelation;
-import io.crate.analyze.symbol.DynamicReference;
-import io.crate.analyze.symbol.Function;
-import io.crate.analyze.symbol.Literal;
-import io.crate.analyze.symbol.Symbol;
-import io.crate.exceptions.ColumnValidationException;
-import io.crate.exceptions.TableUnknownException;
-import io.crate.exceptions.UnsupportedFeatureException;
-import io.crate.metadata.ColumnIdent;
-import io.crate.metadata.Reference;
 import io.crate.metadata.Routing;
 import io.crate.metadata.Schemas;
 import io.crate.metadata.TableIdent;
@@ -39,28 +29,15 @@ import io.crate.metadata.doc.DocTableInfo;
 import io.crate.metadata.table.TestingTableInfo;
 import io.crate.test.integration.CrateDummyClusterServiceUnitTest;
 import io.crate.testing.SQLExecutor;
-import io.crate.types.ArrayType;
-import io.crate.types.DataType;
 import io.crate.types.DataTypes;
-import io.crate.types.DoubleType;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static io.crate.analyze.TableDefinitions.SHARD_ROUTING;
-import static io.crate.analyze.TableDefinitions.USER_TABLE_INFO;
-import static io.crate.testing.SymbolMatchers.isFunction;
-import static io.crate.testing.SymbolMatchers.isLiteral;
-import static io.crate.testing.SymbolMatchers.isReference;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 
 public class UpdateAnalyzerTest extends CrateDummyClusterServiceUnitTest {
 
@@ -117,6 +94,7 @@ public class UpdateAnalyzerTest extends CrateDummyClusterServiceUnitTest {
         e = builder.build();
     }
 
+    /*
     protected UpdateAnalyzedStatement analyze(String statement) {
         return e.analyze(statement);
     }
@@ -549,4 +527,5 @@ public class UpdateAnalyzerTest extends CrateDummyClusterServiceUnitTest {
         analyze("update users set col2 = ? where _version is null",
             new Object[]{1});
     }
+    */
 }
