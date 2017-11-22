@@ -68,12 +68,14 @@ public class MergePhase extends AbstractProjectionsPhase implements UpstreamPhas
      * @param executionNodeId A unique execution id for this phase.
      * @param name The name of the MergePhase.
      * @param numUpstreams The number of nodes to expect data from.
-     * @param numInputs The number of different inputs to read data from.
+     * @param numInputs The number of different inputs to read data from which is equal to
+     *                  the number of upstream phases.
      * @param executionNodes The nodes where this MergePhase executes.
      * @param inputTypes The types of the input rows.
      * @param projections The projections to apply when merging.
      * @param distributionInfo The default strategy to use when distributing the results of the MergePhase.
-     * @param positionalOrderBy The order by positions to apply if ordering is supplied.
+     * @param positionalOrderBy The order by positions on wich the input is pre-sorted on; setting this
+     *                          will result in a sorted merge.
      */
     public MergePhase(UUID jobId,
                       int executionNodeId,

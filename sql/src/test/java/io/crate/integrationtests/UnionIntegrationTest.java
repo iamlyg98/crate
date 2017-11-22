@@ -32,37 +32,32 @@ import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.is;
 
-@ESIntegTestCase.ClusterScope(minNumDataNodes = 2, maxNumDataNodes = 5)
+@ESIntegTestCase.ClusterScope(minNumDataNodes = 1, maxNumDataNodes = 5)
 @UseJdbc
 public class UnionIntegrationTest extends SQLTransportIntegrationTest {
 
-    private boolean setupDone;
-
     @Before
     public void beforeTest() {
-        if (!setupDone) {
-            execute("create table t1 (id integer, text string)");
-            execute("create table t2 (id integer, text string)");
-            execute("create table t3 (id integer, text string)");
+        execute("create table t1 (id integer, text string)");
+        execute("create table t2 (id integer, text string)");
+        execute("create table t3 (id integer, text string)");
 
-            execute("insert into t1 (id, text) values (?, ?)", new Object[][]{
-                new Object[]{1, "text"},
-                new Object[]{1000, "text1"},
-                new Object[]{42, "magic number"}
-            });
-            execute("insert into t2 (id, text) values (?, ?)", new Object[][]{
-                new Object[]{11, "text"},
-                new Object[]{1000, "text2"},
-                new Object[]{43, "magic number"}
-            });
-            execute("insert into t3 (id, text) values (?, ?)", new Object[][]{
-                new Object[]{111, "text"},
-                new Object[]{1000, "text3"},
-                new Object[]{44, "magic number"}
-            });
-            refresh();
-            setupDone = true;
-        }
+        execute("insert into t1 (id, text) values (?, ?)", new Object[][]{
+            new Object[]{1, "text"},
+            new Object[]{1000, "text1"},
+            new Object[]{42, "magic number"}
+        });
+        execute("insert into t2 (id, text) values (?, ?)", new Object[][]{
+            new Object[]{11, "text"},
+            new Object[]{1000, "text2"},
+            new Object[]{43, "magic number"}
+        });
+        execute("insert into t3 (id, text) values (?, ?)", new Object[][]{
+            new Object[]{111, "text"},
+            new Object[]{1000, "text3"},
+            new Object[]{44, "magic number"}
+        });
+        refresh();
     }
 
     @Test
