@@ -107,7 +107,8 @@ Changes
 Fixes
 =====
 
-- Fix an exception which occurred when using row ids in IN or ANY queries.
+- Fixed an exception which occurred when using _id system column in IN or ANY
+  queries.
 
 - The target table name used in ``ALTER TABLE ... RENAME TO`` is now correctly
   validated.
