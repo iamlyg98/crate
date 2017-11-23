@@ -29,7 +29,6 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateArrays;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
 import io.crate.Constants;
 import io.crate.analyze.MatchOptionsAnalysis;
 import io.crate.analyze.WhereClause;
